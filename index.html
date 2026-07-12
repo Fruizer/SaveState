@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SaveState</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-text">
+          <h1>SaveState</h1>
+          <p>One click. Instant focus.</p>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav" aria-label="Primary navigation">
+        <button class="nav-item active" type="button" data-view="home">Home</button>
+        <button class="nav-item" type="button" data-view="statistics">Statistics</button>
+        <button class="nav-item" type="button" data-view="settings">Settings</button>
+      </nav>
+
+      <div class="sidebar-card">
+        <strong>Local-first prototype</strong>
+        <p>
+          Manage project profiles, launch workspaces, and keep your setup ready for deep work.
+        </p>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="hero">
+          <p class="eyebrow">Good morning, Lorenzo</p>
+          <h2>Workspace Manager</h2>
+          <p class="subtitle">
+            Open the right context faster. Less setup. More flow.
+          </p>
+        </div>
+
+        <div class="topbar-actions">
+          <label class="search" for="searchInput" aria-label="Search projects">
+            <span class="search-icon">⌕</span>
+            <input
+              id="searchInput"
+              type="search"
+              placeholder="Search projects..."
+              autocomplete="off"
+            />
+          </label>
+
+          <button id="newProjectBtn" class="btn btn-primary" type="button">
+            + New Project
+          </button>
+        </div>
+      </header>
+
+      <section class="stats-row" aria-label="Project statistics">
+        <article class="stat-card">
+          <span class="stat-label">Total Projects</span>
+          <strong class="stat-value" id="totalProjects">0</strong>
+          <span class="stat-note">Stored locally</span>
+        </article>
+
+        <article class="stat-card">
+          <span class="stat-label">Launched Today</span>
+          <strong class="stat-value" id="launchedToday">0</strong>
+          <span class="stat-note">Mock metric</span>
+        </article>
+
+        <article class="stat-card">
+          <span class="stat-label">Most Used</span>
+          <strong class="stat-value" id="mostUsed">—</strong>
+          <span class="stat-note">Top workspace</span>
+        </article>
+      </section>
+
+      <section class="projects-section" aria-label="Projects">
+        <div class="section-head">
+          <div>
+            <h3>Your Projects</h3>
+            <p>Launch a workspace with one click.</p>
+          </div>
+          <span class="section-badge" id="projectCountBadge">0 projects</span>
+        </div>
+
+        <div id="projectsGrid" class="projects-grid" aria-live="polite">
+          <article class="project-card" data-project-id="project-1">
+            <div class="project-header">
+              <div>
+                <h3 class="project-title">Thesis Project</h3>
+              </div>
+
+              <div class="menu-wrap">
+                <button
+                  class="menu-toggle"
+                  type="button"
+                  aria-label="Project actions"
+                  aria-expanded="false"
+                >
+                  ⋮
+                </button>
+
+                <div class="card-menu" role="menu" aria-hidden="true">
+                  <button type="button" data-action="edit">Edit</button>
+                  <button type="button" data-action="duplicate">Duplicate</button>
+                  <button type="button" data-action="delete" class="danger">Delete</button>
+                </div>
+              </div>
+            </div>
+
+            <p class="project-folder">C:\Projects\Thesis</p>
+
+            <button class="launch-btn" type="button" data-action="launch">
+              Launch Workspace
+            </button>
+          </article>
+
+          <article class="project-card" data-project-id="project-2">
+            <div class="project-header">
+              <div>
+                <h3 class="project-title">Data Structures</h3>
+              </div>
+
+              <div class="menu-wrap">
+                <button
+                  class="menu-toggle"
+                  type="button"
+                  aria-label="Project actions"
+                  aria-expanded="false"
+                >
+                  ⋮
+                </button>
+
+                <div class="card-menu" role="menu" aria-hidden="true">
+                  <button type="button" data-action="edit">Edit</button>
+                  <button type="button" data-action="duplicate">Duplicate</button>
+                  <button type="button" data-action="delete" class="danger">Delete</button>
+                </div>
+              </div>
+            </div>
+
+            <p class="project-folder">D:\School\DSA</p>
+
+            <button class="launch-btn" type="button" data-action="launch">
+              Launch Workspace
+            </button>
+          </article>
+
+          <div id="emptyState" class="empty-state hidden">
+            <div class="empty-icon">◌</div>
+            <h4>Ready to get into the flow?</h4>
+            <p>Create your first workspace.</p>
+          </div>
+
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="project-modal" class="hidden" aria-hidden="true">
+    <div class="overlay-backdrop"></div>
+
+    <section
+      class="modal-panel"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="project-modal-title"
+    >
+      <header class="modal-header">
+        <div>
+          <p class="modal-kicker">Workspace Profile</p>
+          <h3 id="project-modal-title">Create Project</h3>
+        </div>
+
+        <button id="project-modal-close" class="icon-btn" type="button" aria-label="Close modal">
+          ×
+        </button>
+      </header>
+
+      <form id="project-modal-form" class="modal-form">
+        <input type="hidden" id="project-modal-id" />
+
+        <div class="form-row">
+          <div class="field">
+            <label for="project-modal-name">Project Name</label>
+            <input
+              id="project-modal-name"
+              type="text"
+              placeholder="Thesis Project"
+              required
+            />
+          </div>
+
+          <div class="field">
+            <label for="project-modal-folder">Project Folder</label>
+            <input
+              id="project-modal-folder"
+              type="text"
+              placeholder="C:\Projects\Thesis"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="field">
+            <label for="project-modal-ide">IDE Path</label>
+            <input
+              id="project-modal-ide"
+              type="text"
+              placeholder="C:\Users\...\Code.exe"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="project-modal-browser-links">Browser Links</label>
+          <textarea
+            id="project-modal-browser-links"
+            rows="6"
+            placeholder="https://github.com/...&#10;https://docs.google.com/...&#10;https://stackoverflow.com/..."
+          ></textarea>
+        </div>
+
+        <footer class="modal-actions">
+          <button id="project-modal-cancel" class="btn btn-ghost" type="button">
+            Cancel
+          </button>
+          <button id="project-modal-delete" class="btn btn-danger hidden" type="button">
+            Delete
+          </button>
+          <button id="project-modal-save" class="btn btn-primary" type="submit">
+            Save Project
+          </button>
+        </footer>
+      </form>
+    </section>
+  </div>
+
+  <section
+    id="launch-sequence-view"
+    class="hidden"
+    aria-hidden="true"
+  >
+    <div class="launch-shell">
+      <p class="launch-kicker">Preparing Workspace</p>
+      <h2 id="launch-project-name">Launching Project</h2>
+
+      <ul class="launch-list">
+        <li class="launch-step pending" data-step="code-editor">
+          <span class="launch-step-indicator">○</span>
+          <span class="launch-step-label">Code Editor</span>
+        </li>
+
+        <li class="launch-step pending" data-step="terminal-environment">
+          <span class="launch-step-indicator">○</span>
+          <span class="launch-step-label">Terminal Environment</span>
+        </li>
+
+        <li class="launch-step pending" data-step="browser-context">
+          <span class="launch-step-indicator">○</span>
+          <span class="launch-step-label">Browser Context</span>
+        </li>
+      </ul>
+
+      <button id="ready-to-work-btn" class="btn btn-primary hidden" type="button">
+        Ready to Work
+      </button>
+    </div>
+  </section>
+
+  <script src="js/data.js"></script>
+  
+  <script src="js/storage.js"></script>
+  
+  <script src="js/dashboard.js"></script>
+  <script src="js/modal.js"></script>
+  <script src="js/launch.js"></script>
+  
+  <script src="renderer.js"></script>
+</body>
+</html>
