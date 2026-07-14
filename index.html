@@ -40,17 +40,7 @@
           </p>
         </div>
 
-        <div class="topbar-actions">
-          <label class="search" for="searchInput" aria-label="Search projects">
-            <span class="search-icon">⌕</span>
-            <input
-              id="searchInput"
-              type="search"
-              placeholder="Search projects..."
-              autocomplete="off"
-            />
-          </label>
-
+        <div class="topbar-actions">  
           <button id="newProjectBtn" class="btn btn-primary" type="button">
             + New Project
           </button>
@@ -78,6 +68,25 @@
       </section>
 
       <section class="projects-section" aria-label="Projects">
+        <div class="search-filter-row" role="search">
+          <label class="search search-row" for="searchInput" aria-label="Search projects">
+            <span class="search-icon">⌕</span>
+            <input
+              id="searchInput"
+              type="search"
+              placeholder="Search projects..."
+              autocomplete="off"
+            />
+          </label>
+
+          <div class="filter-chips" role="list" aria-label="Project filters">
+            <button class="chip active" type="button">All</button>
+            <button class="chip" type="button">Coursework</button>
+            <button class="chip" type="button">Thesis</button>
+            <button class="chip" type="button">Personal</button>
+          </div>
+        </div>
+
         <div class="section-head">
           <div>
             <h3>Your Projects</h3>
@@ -87,96 +96,46 @@
         </div>
 
         <div id="projectsGrid" class="projects-grid" aria-live="polite">
-          <article class="project-card" data-project-id="project-1">
-            <div class="project-header">
-              <div>
-                <h3 class="project-title">Thesis Project</h3>
-              </div>
-
-              <div class="menu-wrap">
-                <button
-                  class="menu-toggle"
-                  type="button"
-                  aria-label="Project actions"
-                  aria-haspopup="menu"
-                  aria-controls="project-1-actions"
-                  aria-expanded="false"
-                >
-                  ⋮
-                </button>
-
-                <div id="project-1-actions" class="card-menu" role="menu" aria-hidden="true">
-                  <button type="button" data-action="edit">Edit</button>
-                  <button type="button" data-action="duplicate">Duplicate</button>
-                  <button type="button" data-action="delete" class="danger">Delete</button>
-                </div>
-              </div>
-            </div>
-
-            <p class="project-folder">C:\Projects\Thesis</p>
-
-            <button class="launch-btn" type="button" data-action="launch">
-              Launch Workspace
-            </button>
-          </article>
-
-          <article class="project-card" data-project-id="project-2">
-            <div class="project-header">
-              <div>
-                <h3 class="project-title">Data Structures</h3>
-              </div>
-
-              <div class="menu-wrap">
-                <button
-                  class="menu-toggle"
-                  type="button"
-                  aria-label="Project actions"
-                  aria-haspopup="menu"
-                  aria-controls="project-2-actions"
-                  aria-expanded="false"
-                >
-                  ⋮
-                </button>
-
-                <div id="project-2-actions" class="card-menu" role="menu" aria-hidden="true">
-                  <button type="button" data-action="edit">Edit</button>
-                  <button type="button" data-action="duplicate">Duplicate</button>
-                  <button type="button" data-action="delete" class="danger">Delete</button>
-                </div>
-              </div>
-            </div>
-
-            <p class="project-folder">D:\School\DSA</p>
-
-            <button class="launch-btn" type="button" data-action="launch">
-              Launch Workspace
-            </button>
-          </article>
-
+          <!-- Project cards injected via JS -->
           <div id="emptyState" class="empty-state hidden">
             <div class="empty-icon">◌</div>
             <h4>Ready to get into the flow?</h4>
             <p>Create your first workspace.</p>
           </div>
-
         </div>
       </section>
     </main>
   </div>
 
+  <!-- WORKSPACE CREATION MODAL -->
   <div id="project-modal" class="hidden" aria-hidden="true">
     <div class="overlay-backdrop"></div>
 
     <section
-      class="modal-panel"
+      class="modal-panel wizard-panel"
       role="dialog"
       aria-modal="true"
       aria-labelledby="project-modal-title"
     >
-      <header class="modal-header">
+      <div class="wizard-progress" aria-label="Creation progress">
+        <div class="progress-step active">
+          <span class="progress-index">1</span>
+          <span class="progress-label">Identity</span>
+        </div>
+        <div class="progress-step">
+          <span class="progress-index">2</span>
+          <span class="progress-label">Components</span>
+        </div>
+        <div class="progress-step">
+          <span class="progress-index">3</span>
+          <span class="progress-label">Launch</span>
+        </div>
+      </div>
+
+      <header class="wizard-header">
         <div>
-          <p class="modal-kicker">Workspace Profile</p>
-          <h3 id="project-modal-title">Create Project</h3>
+          <p class="modal-kicker">Workspace Setup</p>
+          <h3 id="project-modal-title">Create a New Workspace</h3>
         </div>
 
         <button id="project-modal-close" class="icon-btn" type="button" aria-label="Close modal">
@@ -184,89 +143,250 @@
         </button>
       </header>
 
-      <form id="project-modal-form" class="modal-form">
+      <form id="project-modal-form" class="wizard-form">
         <input type="hidden" id="project-modal-id" />
+        <input type="hidden" id="project-modal-accent" value="#4f86ff" />
 
-        <div class="form-row">
-          <div class="field">
-            <label for="project-modal-name">Project Name</label>
-            <input
-              id="project-modal-name"
-              type="text"
-              placeholder="Thesis Project"
-              required
-            />
+        <div class="wizard-body">
+          
+          <!-- STEP 1: IDENTITY -->
+          <div class="wizard-step active" data-step="identity">
+            <div class="wizard-grid">
+              <div class="field">
+                <label for="project-modal-name">Workspace Name</label>
+                <input
+                  id="project-modal-name"
+                  type="text"
+                  placeholder="Thesis Studio"
+                  required
+                />
+              </div>
+
+              <div class="field">
+                <label for="project-modal-folder">Project Path</label>
+                <input
+                  id="project-modal-folder"
+                  type="text"
+                  placeholder="C:\Projects\Thesis"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="project-modal-browser-links">Description (Optional)</label>
+              <textarea
+                id="project-modal-browser-links"
+                rows="5"
+                placeholder="Capture the purpose of this workspace, key tools, or your ideal launch context..."
+              ></textarea>
+            </div>
+
+            <div class="field">
+              <label for="project-modal-category">Category</label>
+              <select id="project-modal-category">
+                <option>Coursework</option>
+                <option>Thesis/Research</option>
+                <option>Personal Project</option>
+                <option>Work</option>
+                <option>Other</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label>Accent Color</label>
+              <div class="accent-picker">
+                <button class="accent-option active" type="button" data-color="#4f86ff" aria-label="Blue accent" style="--accent:#4f86ff"></button>
+                <button class="accent-option" type="button" data-color="#8b5cf6" aria-label="Purple accent" style="--accent:#8b5cf6"></button>
+                <button class="accent-option" type="button" data-color="#22c55e" aria-label="Mint accent" style="--accent:#22c55e"></button>
+                <button class="accent-option" type="button" data-color="#f59e0b" aria-label="Amber accent" style="--accent:#f59e0b"></button>
+                <label class="accent-input">
+                  <span>#</span>
+                  <input id="project-modal-accent-input" type="text" placeholder="4F86FF" />
+                </label>
+              </div>
+            </div>
+          </div> 
+
+          <!-- STEP 2: COMPONENTS -->
+          <div class="wizard-step" data-step="components">
+            
+            <!-- Code Editor Card -->
+            <div class="component-card active">
+              <div class="component-head">
+                <div class="component-icon">
+                  <img src="assets/code-xml.svg" alt="Editor" class="custom-icon size-md" />
+                </div>
+                <div>
+                  <strong>Code Editor</strong>
+                  <p>Launch your primary editor with the project context.</p>
+                </div>
+              </div>
+              
+              <label class="switch">
+                <!-- 💡 Added data-component attribute -->
+                <input type="checkbox" data-component="hasEditor" checked />
+                <span class="slider"></span>
+              </label>
+
+              <div class="component-body">
+                <div class="component-field">
+                  <span>Application</span>
+                  <select>
+                    <option>VS Code</option>
+                    <option>Cursor</option>
+                    <option>WebStorm</option>
+                    <option>IntelliJ IDEA</option>
+                  </select>
+                </div>
+                
+                <!-- 💡 FIXED: Added the missing IDE Path input field here -->
+                <div class="component-field">
+                  <span>IDE Executable Path</span>
+                  <input id="project-modal-ide" type="text" placeholder="C:\Users\...\Code.exe" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Terminal Card -->
+            <div class="component-card active">
+              <div class="component-head">
+                <div class="component-icon">
+                  <img src="assets/terminal.svg" alt="Terminal" class="custom-icon size-md" />
+                </div>
+                <div>
+                  <strong>Terminal</strong>
+                  <p>Restore your shell environment with the right working directory.</p>
+                </div>
+              </div>
+
+              <label class="switch">
+                <input type="checkbox" checked />
+                <span class="slider"></span>
+              </label>
+
+              <div class="component-body">
+                <div class="component-field">
+                  <span>Start Directory</span>
+                  <input type="text" placeholder="./src or default workspace path" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Browser Tabs Card -->
+            <div class="component-card">
+              <div class="component-head">
+                <div class="component-icon">
+                  <img src="assets/globe.svg" alt="Browser" class="custom-icon size-md" />
+                </div>
+                <div>
+                  <strong>Browser Tabs</strong>
+                  <p>Open your most useful docs and references instantly.</p>
+                </div>
+              </div>
+
+              <label class="switch">
+                <input type="checkbox" />
+                <span class="slider"></span>
+              </label>
+
+              <div class="component-body">
+                <div class="component-field dynamic-list-field">
+                  <span>Tabs</span>
+                  <div class="dynamic-list" data-list="browser">
+                    <div class="dynamic-list-row">
+                      <input type="text" class="dynamic-list-input" placeholder="https://github.com/..." />
+                      <button class="dynamic-list-remove" type="button" aria-label="Remove link">×</button>
+                    </div>
+                  </div>
+                  <button class="dynamic-list-add btn btn-ghost" type="button" data-list-target="browser">+ Add Link</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Notes Card -->
+            <div class="component-card">
+              <div class="component-head">
+                <div class="component-icon">
+                  <img src="assets/sticky-note.svg" alt="Notes" class="custom-icon size-md" />
+                </div>
+                <div>
+                  <strong>Notes</strong>
+                  <p>Attach a quick memo, checklist, or launch reminder.</p>
+                </div>
+              </div>
+
+              <label class="switch">
+                <input type="checkbox" />
+                <span class="slider"></span>
+              </label>
+
+              <div class="component-body">
+                <div class="component-field dynamic-list-field">
+                  <span>Notebook</span>
+                  <div class="dynamic-list" data-list="notes">
+                    <div class="dynamic-list-row">
+                      <input type="text" class="dynamic-list-input" placeholder="Notes/launch-checklist.md" />
+                      <button class="dynamic-list-remove" type="button" aria-label="Remove file">×</button>
+                    </div>
+                  </div>
+                  <button class="dynamic-list-add btn btn-ghost" type="button" data-list-target="notes">+ Add File</button>
+                </div>
+              </div>
+            </div>
+
+          </div> 
+
+          <!-- STEP 3: LAUNCH (Safe Fallback) -->
+          <div class="wizard-step" data-step="launch">
+            <div class="empty-state" style="margin-top: 20px;">
+              <div class="empty-icon" style="color: var(--success); background: rgba(34, 197, 94, 0.1);">✓</div>
+              <h4>Workspace Ready</h4>
+              <p>Your setup is complete. Click below to save this profile.</p>
+            </div>
           </div>
 
-          <div class="field">
-            <label for="project-modal-folder">Project Folder</label>
-            <input
-              id="project-modal-folder"
-              type="text"
-              placeholder="C:\Projects\Thesis"
-              required
-            />
-          </div>
-        </div>
+        </div> 
 
-        <div class="form-row">
-          <div class="field">
-            <label for="project-modal-ide">IDE Path</label>
-            <input
-              id="project-modal-ide"
-              type="text"
-              placeholder="C:\Users\...\Code.exe"
-              required
-            />
-          </div>
-        </div>
-
-        <div class="field">
-          <label for="project-modal-browser-links">Browser Links</label>
-          <textarea
-            id="project-modal-browser-links"
-            rows="6"
-            placeholder="https://github.com/...&#10;https://docs.google.com/...&#10;https://stackoverflow.com/..."
-          ></textarea>
-        </div>
-
-        <footer class="modal-actions">
+        <footer class="wizard-actions">
           <button id="project-modal-cancel" class="btn btn-ghost" type="button">
             Cancel
           </button>
-          <button id="project-modal-delete" class="btn btn-danger hidden" type="button">
-            Delete
-          </button>
-          <button id="project-modal-save" class="btn btn-primary" type="submit">
-            Save Project
-          </button>
+          <div class="wizard-nav-right">
+            <button id="project-modal-delete" class="btn btn-ghost hidden" type="button">
+              Delete
+            </button>
+            <button class="btn btn-ghost wizard-back" type="button">
+              ← Back
+            </button>
+            <button id="project-modal-save" class="btn btn-primary" type="submit">
+              Next
+            </button>
+          </div>
         </footer>
       </form>
     </section>
   </div>
 
-  <section
-    id="launch-sequence-view"
-    class="hidden"
-    aria-hidden="true"
-  >
+  <!-- LAUNCH SEQUENCE SCREEN -->
+  <section id="launch-sequence-view" class="hidden" aria-hidden="true">
     <div class="launch-shell">
       <p class="launch-kicker">Preparing Workspace</p>
       <h2 id="launch-project-name">Launching Project</h2>
 
       <ul class="launch-list">
         <li class="launch-step pending" data-step="code-editor">
-          <span class="launch-step-indicator">○</span>
+          <img src="assets/loader.svg" alt="Loading" class="custom-icon spin-icon" />
           <span class="launch-step-label">Code Editor</span>
         </li>
 
         <li class="launch-step pending" data-step="terminal-environment">
-          <span class="launch-step-indicator">○</span>
+          <img src="assets/loader.svg" alt="Loading" class="custom-icon spin-icon" />
           <span class="launch-step-label">Terminal Environment</span>
         </li>
 
         <li class="launch-step pending" data-step="browser-context">
-          <span class="launch-step-indicator">○</span>
+          <img src="assets/loader.svg" alt="Loading" class="custom-icon spin-icon" />
           <span class="launch-step-label">Browser Context</span>
         </li>
       </ul>
@@ -277,14 +397,12 @@
     </div>
   </section>
 
+  <!-- SCRIPTS -->
   <script src="js/data.js"></script>
-  
   <script src="js/storage.js"></script>
-  
   <script src="js/dashboard.js"></script>
   <script src="js/modal.js"></script>
   <script src="js/launch.js"></script>
-  
   <script src="renderer.js"></script>
 </body>
 </html>

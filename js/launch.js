@@ -11,12 +11,21 @@ function qsaLaunch(selector, root = document) {
 }
 
 function setStepIndicator(stepEl, state) {
-  const indicator = stepEl.querySelector('.launch-step-indicator');
-  if (!indicator) return;
+  const imgEl = stepEl.querySelector('img');
+  if (!imgEl) return;
 
-  if (state === 'pending') indicator.textContent = '○';
-  if (state === 'active') indicator.textContent = '⟳';
-  if (state === 'complete') indicator.textContent = '✓';
+  if (state === 'pending') {
+    imgEl.src = 'assets/loader.svg';
+    imgEl.classList.remove('spin-icon');
+  }
+  if (state === 'active') {
+    imgEl.src = 'assets/loader.svg';
+    imgEl.classList.add('spin-icon'); // Starts the CSS rotate animation
+  }
+  if (state === 'complete') {
+    imgEl.src = 'assets/badge-check.svg';
+    imgEl.classList.remove('spin-icon'); // Stops the animation
+  }
 }
 
 function setStepState(stepEl, state) {

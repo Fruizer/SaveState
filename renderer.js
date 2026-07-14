@@ -43,7 +43,10 @@ function init() {
   state.projects = loadProjects(seedProjects);
 
   // Initialize modular features
-  modalModule = createProjectModal();
+  modalModule = window.projectModal || createProjectModal();
+  if (!window.projectModal) {
+    window.projectModal = modalModule;
+  }
   launchModule = createLaunchSequence();
 
   bindGlobalEvents();
