@@ -78,7 +78,7 @@ function renderDashboard({ projects, gridEl, emptyEl, badgeEl, totalEl, launched
       </div>
 
       <div class="component-indicators">
-        ${project.hasEditor !== false ? `
+        ${project.hasEditor ? `
         <div class="comp-chip code" title="Code Editor">
           <img src="assets/code-xml.svg" alt="Code" class="custom-icon" />
         </div>` : ''}
@@ -88,7 +88,7 @@ function renderDashboard({ projects, gridEl, emptyEl, badgeEl, totalEl, launched
           <img src="assets/globe.svg" alt="Web" class="custom-icon" />
         </div>` : ''}
 
-        ${project.hasTerminal !== false ? `
+        ${project.hasTerminal ? `
         <div class="comp-chip term" title="Terminal">
           <img src="assets/terminal.svg" alt="Terminal" class="custom-icon" />
         </div>` : ''}

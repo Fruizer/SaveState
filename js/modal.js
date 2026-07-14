@@ -184,7 +184,13 @@ function createProjectModal({
     
     // Reset switches to default states
     modalEl.querySelectorAll('.component-card .switch input[type="checkbox"]').forEach((cb) => {
-      cb.checked = cb.dataset.component === 'hasEditor' || cb.dataset.component === 'hasTerminal';
+      const componentName = cb.dataset.component;
+      if (componentName === 'hasEditor') cb.checked = true;
+      else if (componentName === 'hasTerminal') cb.checked = true;
+      else if (componentName === 'hasBrowser') cb.checked = false;
+      else if (componentName === 'hasNotes') cb.checked = false;
+      else cb.checked = false;
+
       cb.closest('.component-card')?.classList.toggle('active', cb.checked);
     });
 
@@ -213,20 +219,17 @@ function createProjectModal({
     if (accentField) accentField.value = project.accentColor || '#4f86ff';
     if (accentInputField) accentInputField.value = (project.accentColor || '#4f86ff').replace('#', '');
     
-    // Restore switch states from saved data
     modalEl.querySelectorAll('.component-card .switch input[type="checkbox"]').forEach((cb) => {
       const prop = cb.dataset.component;
       if (prop) {
-        cb.checked = project[prop] !== false;
-        if (prop === 'hasBrowser' || prop === 'hasNotes') {
-          cb.checked = !!project[prop];
-        }
+        const value = project[prop];
+        cb.checked = Boolean(value);
         cb.closest('.component-card')?.classList.toggle('active', cb.checked);
       }
     });
 
     populateDynamicLists({
-      'browser-links': Array.isArray(project.browserLinks) ? project.browserLinks : [],
+      browser: Array.isArray(project.browserLinks) ? project.browserLinks : [],
       notes: Array.isArray(project.notes) ? project.notes : [],
     });
     setAccentColor(project.accentColor || '#4f86ff');
@@ -245,7 +248,7 @@ function createProjectModal({
   }
 
   function readForm() {
-    const browserLinks = Array.from(modalEl.querySelectorAll('.dynamic-list[data-list="browser-links"] .dynamic-list-row'))
+    const browserLinks = Array.from(modalEl.querySelectorAll('.dynamic-list[data-list="browser"] .dynamic-list-row'))
       .map((row) => row.querySelector('.dynamic-list-input')?.value.trim() || '')
       .filter(Boolean);
 
